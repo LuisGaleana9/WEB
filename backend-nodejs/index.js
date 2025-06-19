@@ -1,52 +1,40 @@
-// archivo: index.js
-
-// 1. Importar las librerías
 const express = require('express');
 const mysql = require('mysql2/promise');
 const cors = require('cors');
 const bcrypt = require('bcryptjs'); 
 
-const saltRounds = 10; // Factor de encriptación para las contraseñas
+const saltRounds = 10; 
 
-// 2. Configuración inicial
+
 const app = express();
 const PORT = 8080;
 
-// 3. Middlewares
+// Middleware para permitir CORS y parsear JSON
 app.use(cors({
     origin: 'http://localhost:5173'
 }));
 app.use(express.json());
 
-// 4. Configuración de la base de datos
+// Conexión a la base de datos MySQL
 const pool = mysql.createPool({
     host: '127.0.0.1',
     user: 'root',
-    password: 'dldandld', // <-- RECUERDA PONER TU CONTRASEÑA
+    password: 'dldandld', 
     database: 'sistemas_bombeo',
     waitForConnections: true,
     connectionLimit: 10,
     queueLimit: 0
 });
 
-// ... (El resto de la inicialización y rutas de dispositivos se mantiene igual)
-// ... (Puedes copiar y pegar tus rutas de /dispositivos aquí si las modificaste)
-
-// ======================================================
-//      NUEVAS RUTAS PARA AUTENTICACIÓN DE USUARIOS
-// ======================================================
-
 // RUTA: Registrar un nuevo usuario
 app.post('/usuarios/register', async (req, res) => {
-    // AHORA RECIBIMOS 4 CAMPOS DEL FRONTEND
     const { nombre, apellido, username, password } = req.body;
     if (!nombre || !apellido || !username || !password) {
         return res.status(400).json({ error: 'Todos los campos son requeridos.' });
     }
 
     try {
-        const hashedPassword = await bcrypt.hash(password, saltRounds);
-        // ACTUALIZAMOS LA CONSULTA PARA INSERTAR LOS NUEVOS CAMPOS
+        const hashedPassword = await bcrypt.hash(password, saltRounds); // Encriptar la contraseña
         const query = "INSERT INTO usuarios (nombre, apellido, username, password) VALUES (?, ?, ?, ?)";
         await pool.query(query, [nombre, apellido, username, hashedPassword]);
         
@@ -66,7 +54,6 @@ app.post('/usuarios/login', async (req, res) => {
     }
 
     try {
-        // AHORA PEDIMOS TAMBIÉN EL NOMBRE Y APELLIDO PARA DEVOLVERLOS
         const query = "SELECT id, username, password, nombre, apellido FROM usuarios WHERE username = ?";
         const [users] = await pool.query(query, [username]);
 
@@ -81,7 +68,6 @@ app.post('/usuarios/login', async (req, res) => {
             return res.status(401).json({ error: 'Credenciales inválidas.' });
         }
         
-        // DEVOLVEMOS EL OBJETO DE USUARIO COMPLETO (SIN LA CONTRASEÑA)
         res.status(200).json({
             mensaje: 'Login exitoso.',
             user: { 
@@ -95,11 +81,6 @@ app.post('/usuarios/login', async (req, res) => {
         res.status(500).json({ error: 'Error en el servidor.' });
     }
 });
-
-
-// ======================================================
-//      RUTAS DE DISPOSITIVOS (Mantenemos las que ya tenías)
-// ======================================================
 
 // Obtener todos los dispositivos
 app.get('/dispositivos', async (req, res) => {
@@ -136,7 +117,7 @@ app.post('/dispositivos/delete', async (req, res) => {
 });
 
 
-// Iniciar el servidor (la función de inicialización de DB ya no es necesaria aquí)
+// Iniciar el servidor 
 app.listen(PORT, () => {
     console.log(`🚀 Servidor Node.js corriendo en http://localhost:${PORT}`);
 });

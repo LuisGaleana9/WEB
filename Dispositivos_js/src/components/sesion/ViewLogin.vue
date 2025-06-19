@@ -55,7 +55,6 @@
 </template>
 
 <script setup>
-// La lógica del script se mantiene exactamente igual, ya que es funcional.
 import { ref } from 'vue';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
@@ -76,15 +75,12 @@ const iniciarSesion = async () => {
       password: password.value
     });
 
-    // --- AÑADE ESTA LÍNEA PARA DEPURAR ---
     console.log('Datos recibidos del backend:', response.data.user); 
-    // ------------------------------------
 
     store.commit('setUsuario', response.data.user);
     router.push('/');
 
   } catch (error) {
-    // ... el resto del catch se mantiene igual
     if (error.response && error.response.data.error) {
       mensajeError.value = error.response.data.error;
     } else {
@@ -95,10 +91,8 @@ const iniciarSesion = async () => {
 </script>
 
 <style scoped>
-/* Copiamos y adaptamos los estilos del componente de registro */
 .login-container {
   min-height: 100vh;
-  /* Puedes cambiar el gradiente si quieres un color diferente para el login */
   background: linear-gradient(to right top, #2a7d53, #2e8b57, #35995c, #3da760, #45b665);
 }
 .login-card {

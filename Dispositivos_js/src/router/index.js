@@ -9,18 +9,15 @@ import ViewDispositivos from '../components/dispositivos/ViewDispositivos.vue'
 import RegistroDispositivo from '../components/dispositivos/RegistroDispositivo.vue'
 
 const routes = [
-  // Rutas públicas
   {
     path: '/login', name: 'login', component: ViewLogin, meta: { requiresAuth: false }
   },
   {
     path: '/registro', name: 'registro', component: ViewRegistroUsuario, meta: { requiresAuth: false }
   },
-  // Redirección
   {
     path: '/', redirect: '/menu/dispositivos'
   },
-  // Rutas privadas anidadas bajo el layout de ViewMenu
   {
     path: '/menu',
     component: ViewMenu,
@@ -45,7 +42,6 @@ const router = createRouter({
   routes
 })
 
-// Guardia de navegación
 router.beforeEach((to, from, next) => {
   const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
   const isLoggedIn = store.getters.isLoggedIn;

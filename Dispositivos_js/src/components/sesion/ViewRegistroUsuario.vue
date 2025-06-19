@@ -90,7 +90,7 @@ export default {
       usuario: {
         nombre: "",
         apellido: "",
-        username: "", // Asegúrate de que se llame 'username' y no 'userName'
+        username: "", 
         password: "",
       },
       alerta: {
@@ -106,7 +106,6 @@ export default {
       this.alerta = { mensaje: "", tipo: "" };
       
       try {
-        // 'this.usuario' ahora tiene la estructura correcta
         await axios.post('http://localhost:8080/usuarios/register', this.usuario);
 
         this.alerta = {

@@ -1,25 +1,29 @@
 import { createStore } from 'vuex'
-import SessionStore from '../servicios/SessionStore' // Importamos el SessionStore original
 
 export default createStore({
   state: {
-    // El único estado global es el del usuario
-    usuario: null
+    usuario: null,
+    dispositivos: [],
+    usuarios: []
   },
   mutations: {
     setUsuario(state, usuario) {
-      state.usuario = usuario;
+      state.usuario = usuario
+    },
+    clearUsuario(state) {
+        state.usuario = null
+    },
+    setDispositivos (state, payload) {
+      state.dispositivos = payload
     }
   },
   actions: {
-    async login(context, p) {
-      const u = await SessionStore.Login(p.usr, p.psw);
-      context.commit('setUsuario', u);
+    logout({ commit }) {
+      commit('clearUsuario');
     }
   },
   getters: {
-    getUsuario: state => {
-      return state.usuario;
-    }
+    isLoggedIn: state => !!state.usuario,
+    getUsuario: state => state.usuario
   }
 })
